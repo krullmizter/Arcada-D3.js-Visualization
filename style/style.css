@@ -2,4 +2,23 @@ html {
   font-size: 62.5%;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  max-width: 160px;
+  max-height: 200px;
+  margin: auto;
+  padding: 5px;
+  font: 80%;
+  color: black;
+  pointer-events: none;
+  border-style: solid;
+  border-radius: 8px;
+  
+  /* Lmao, we can change the color if we want but this is too funny */
+  /* https://www.color-hex.com/color-palette/78018 */
+  background:rgba(255, 170 , 95);
+  border-color: rgba(229, 124, 0, 0.9);
+}
 /*# sourceMappingURL=style.css.map */

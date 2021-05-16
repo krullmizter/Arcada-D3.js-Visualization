@@ -58,33 +58,32 @@ $('document').ready(() => {
       const color = d3.scaleOrdinal()
         .domain(insults)
         .range(colors)
+    
+      const tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
 
-        //Gives d3.mouse is not an function error, find way to get tooltip at mouse
-/*
-      const tooltip = d3.select("#tooltip")
-        .attr("id", "tooltip")
-        .style("opacity", 0)
+      const mouseover = (event, d) => {
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", .9);
 
+          tooltip.html(
+            d.date + "<br/>"
+            + d.target + " "
+            + d.insult + "<br/>"
+            + "<br/>" + d.tweet
+          )
 
-      const mouseover = function(d) {
-        tooltip.style("opacity", 1)
-        d3.select(this)
-          .style("stroke", "black")
-          .style("opacity", 1)
+          .style("left", (event.pageX + 8) + "px")
+          .style("top", (event.pageY - 94) + "px");
       }
 
-      const mousemove = function(d) {
-        tooltip
-          .html("Lorem ipsum")
-          .html("dolor sit amet")
-          .style("left", (d3.mouse(this)[0]+70) + "px")
-          .style("top", (d3.mouse(this)[1]) + "px")
+      const mouseleave = (d) => {
+        tooltip.transition()
+          .duration(400)
+          .style("opacity", 0);
       }
-
-      const mouseleave = function(d) {
-        tooltip.style("opacity", 0)
-      }
-*/     
 
       const circles = svg.selectAll('circle')
         .data(data).enter()
@@ -95,10 +94,9 @@ $('document').ready(() => {
               .attr('r', d => size(d.target) )
               .attr('fill', d => color(d.insult) )
               .attr('stroke', 'black')
-              .attr('stroke-width', .5);
-            //.on("mouseover", mouseover)
-            //.on("mousemove", mousemove)
-            //.on("mouseleave", mouseleave);
+              .attr('stroke-width', .5)
+              .on("mouseover", mouseover)
+              .on("mouseout", mouseleave);
 
       const simulations = d3.forceSimulation()
         .force('center',  d3.forceCenter().x(width / 2).y(height / 2))
