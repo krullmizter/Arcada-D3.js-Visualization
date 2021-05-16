@@ -1,8 +1,8 @@
 $('document').ready(() => {
-  let dates = [],
+  let dates   = [],
       targets = [],
       insults = [],
-      tweets = [];
+      tweets  = [];
       
     loadTweets();
     
@@ -51,38 +51,38 @@ $('document').ready(() => {
         .append('svg')
           .attr('viewBox', `0 0 ${width} ${height}`)
 
-      const size = d3.scaleOrdinal()
-        .domain(targets)
-        .range(sizes)
-
       const color = d3.scaleOrdinal()
-        .domain(insults)
+        .domain(targets)
         .range(colors)
-    
-      const tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
 
-      const mouseover = (event, d) => {
+      const size = d3.scaleOrdinal()
+        .domain(insults)
+        .range(sizes)
+    
+      const tooltip = d3.select('body')
+        .append('div')
+          .attr('class', 'tooltip')
+          .attr('opacity', 0);
+
+      const mouseover = (event, tweet) => {
         tooltip.transition()
           .duration(200)
-          .style("opacity", .9);
+          .style('opacity', .9);
 
           tooltip.html(
-            d.date + "<br/>"
-            + d.target + " "
-            + d.insult + "<br/>"
-            + "<br/>" + d.tweet
+            '<strong>' + tweet.insult + '</strong> <br/>'
+            + tweet.date + ' ' + tweet.target + '<br/><br/>'
+            + tweet.tweet
           )
 
-          .style("left", (event.pageX + 8) + "px")
-          .style("top", (event.pageY - 94) + "px");
+          .style('left', (event.pageX + 8) + 'px')
+          .style('top', (event.pageY - 94) + 'px');
       }
 
-      const mouseleave = (d) => {
+      const mouseleave = () => {
         tooltip.transition()
           .duration(400)
-          .style("opacity", 0);
+          .style('opacity', 0);
       }
 
       const circles = svg.selectAll('circle')
@@ -91,17 +91,25 @@ $('document').ready(() => {
             .classed('circle', true)
               .attr('cx', width)
               .attr('cy', height)
-              .attr('r', d => size(d.target) )
+              .attr('r',    d => size(d.target) )
               .attr('fill', d => color(d.insult) )
               .attr('stroke', 'black')
               .attr('stroke-width', .5)
-              .on("mouseover", mouseover)
-              .on("mouseout", mouseleave);
+                .on('mouseover', mouseover)
+                .on('mouseout', mouseleave)
+              .call(d3.drag()
+                  .on('drag', dragging));
+        
+      function dragging(event, d) {
+        d3.select(this)
+          .attr('cx', d.x = event.x)
+          .attr('cy', d.y = event.y);
+      }
 
       const simulations = d3.forceSimulation()
         .force('center',  d3.forceCenter().x(width / 2).y(height / 2))
         .force('charge',  d3.forceManyBody().strength(.2))
-        .force('collide', d3.forceCollide().strength(.3).radius( d =>  (size(d.target)+3) ).iterations(1))
+        .force('collide', d3.forceCollide().strength(.3).radius( d => (size(d.target)+3) ).iterations(1))
 
         simulations
         .nodes(data)
