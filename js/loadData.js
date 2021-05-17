@@ -46,6 +46,8 @@ $('document').ready(() => {
         '#adb5bd',
         '#292b2c'
       ];
+
+      const gravitationalPull = .05;
       
       const svg = d3.select('#graph')
         .append('svg')
@@ -81,11 +83,10 @@ $('document').ready(() => {
 
       const mouseleave = () => {
         tooltip.transition()
-          .duration(400)
           .style('opacity', 0);
       }
 
-      const circles = svg.selectAll('circle')
+      const circle = svg.selectAll('circle')
         .data(data).enter()
           .append('circle')
             .classed('circle', true)
@@ -98,25 +99,39 @@ $('document').ready(() => {
                 .on('mouseover', mouseover)
                 .on('mouseout', mouseleave)
               .call(d3.drag()
-                  .on('drag', dragging));
-        
+                .on('start', dragStart)
+                .on('drag',  dragging)
+                .on('end',   dragEnd));
+
+      function dragStart(event) {
+        if(!event.active) {
+          simulations.alphaTarget(gravitationalPull).restart();
+        }
+      }
+
       function dragging(event, d) {
         d3.select(this)
           .attr('cx', d.x = event.x)
           .attr('cy', d.y = event.y);
       }
 
+      function dragEnd(event) {
+        if(!event.active) {
+          simulations.alphaTarget(gravitationalPull);
+        }
+      }
+ 
       const simulations = d3.forceSimulation()
-        .force('center',  d3.forceCenter().x(width / 2).y(height / 2))
-        .force('charge',  d3.forceManyBody().strength(.2))
-        .force('collide', d3.forceCollide().strength(.3).radius( d => (size(d.target)+3) ).iterations(1))
+        .force('centerGravity', d3.forceCenter().x(width / 2).y(height / 2))
+        .force('attraction',    d3.forceManyBody().strength(gravitationalPull))
+        .force('collision',     d3.forceCollide().strength(.3).radius( d => (size(d.target)+3) ).iterations(1))
 
-        simulations
+      simulations
         .nodes(data)
           .on('tick', () => {
-              circles
+              circle
                 .attr('cx', d => d.x )
                 .attr('cy', d => d.y )
-          });
+         });
     }
 });
