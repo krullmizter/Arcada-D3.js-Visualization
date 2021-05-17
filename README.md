@@ -1,0 +1,13 @@
+#### Why we choose the data and the graph type
+- We found the dataset on Kaggle [All Trump's Twitter insults (2015-2021)](https://www.kaggle.com/ayushggarg/all-trumps-twitter-insults-20152021 "All Trump's Twitter insults (2015-2021)")
+- We thought that the dataset was varied, and had lots of potentials when wanting to present large amounts of data using d3.js.
+- We looked over lots of data visualization ideas, and many graphs but the circle packing graph looked to most fun.
+- The idea of moving the circles around and having them interact with one another came from the graphs that we looked at when researching the circle packing graph in general.
+- We thought that using tooltips to then show the tweet was a nice way of presenting the data. All in all, we combined a fun dataset, with a nice-looking graph type. Using dragging functionality, physics and tooltips brought everything together.  
+#### Execution
+We solved the circular packing graph quite easily. Loading in the data via the `.csv` file wasn't difficult at all. We just used a JavaScript promise with a `for-loop` to iterate through each `.csv` line. The `.csv` file contained plenty of data such as: - Date - Insult - Target - Tweet text  So from that we could visualize the data in a good way.   One difficulty that we found was that the gravitational pull or the `forceSimulation()` stopped working after a set amount of time. This problem arose when we tried to implement the dragging functionally, but an easy `dragStart()` and `dragEnd()` function solved the problem.  Another issue we found out was that the dataset contained so much data that we couldn't bring everything in, so we used a smaller amount of the total dataset. Even though we did this we found that the circles could overflow and look quite bad. We fixed this to some extent using the d3 viewBox to help with the graph's responsiveness.
+#### Self-reflection
+###### Samuel
+I personally think that we as a group worked great together. We could split up the project into different tasks and work simultaneously. I think that this project was easier than project #2. I think that our nicely done graph, clean code, unique dataset, and nice workflow earn us a 5.
+###### Sebastian
+My thoughts align with Samuels. Great teamwork, flow, and task management I am also of the opinion that project #3 was much easier than the 2nd one. I believe it is mainly because of the freedom and plethora of options we had to choose from when creating this graph. All in all, a well done assigment worthy of a 5.
